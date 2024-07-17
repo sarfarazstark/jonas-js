@@ -8,6 +8,7 @@ const renderError = function (msg) {
 };
 
 const renderCountry = function (data, className = '') {
+  console.log(data);
   const html = `
 <article class="country ${className}">
   <img class="country__img" src="${data.flag}" />
@@ -133,7 +134,6 @@ const renderCountry = function (data, className = '') {
 //         'Country not found'
 //       );
 //     })
-
 //     .then(data => renderCountry(data, 'neighbour'))
 //     .catch(err => {
 //       console.error(`${err} 💥💥💥`);
@@ -205,3 +205,50 @@ TEST COORDINATES 2: -33.933, 18.474
 
 GOOD LUCK 😀
 */
+const getJSON = function (url, error = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${error}, ${response.status}`);
+    return response.json();
+  });
+};
+const getCountryData2 = function (country) {
+  getJSON(
+    `https://restcountries.com/v2/name/${country}`,
+    'RESTCountryAPI not available'
+  )
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders[0];
+      if (!neighbour) throw new Error('No neighbour found!');
+      return getJSON(
+        `https://restcountries.com/v2/alpha/${neighbour}`,
+        'Country not found'
+      );
+    })
+    .then(data => renderCountry(data, 'neighbour'))
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥 ${err.message}. try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+const whereAmI = function (lat, lon) {
+  getJSON(
+    `https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}&api_key=6697a77bd9d3f606025998nxq7a419d`,
+    'GEOCODE api not available'
+  )
+    .then(data => {
+      console.log(data);
+      const { city, country } = data.address;
+      getCountryData2(country);
+      console.log(`You are in ${city}, ${country}`);
+    })
+    .catch(err => console.log(err));
+};
+
+btn.addEventListener('click', function () {
+  whereAmI('-33.933', '18.474');
+});
