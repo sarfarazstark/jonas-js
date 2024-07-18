@@ -206,35 +206,35 @@ TEST COORDINATES 2: -33.933, 18.474
 GOOD LUCK 😀
 */
 
-// const getJSON = function (url, error = 'Something went wrong') {
-//   return fetch(url).then(response => {
-//     if (!response.ok) throw new Error(`${error}, ${response.status}`);
-//     return response.json();
-//   });
-// };
-// const getCountryData2 = function (country) {
-//   getJSON(
-//     `https://restcountries.com/v2/name/${country}`,
-//     'RESTCountryAPI not available'
-//   )
-//     .then(data => {
-//       renderCountry(data[0]);
-//       const neighbour = data[0].borders[0];
-//       if (!neighbour) throw new Error('No neighbour found!');
-//       return getJSON(
-//         `https://restcountries.com/v2/alpha/${neighbour}`,
-//         'Country not found'
-//       );
-//     })
-//     .then(data => renderCountry(data, 'neighbour'))
-//     .catch(err => {
-//       console.error(`${err} 💥💥💥`);
-//       renderError(`Something went wrong 💥💥 ${err.message}. try again!`);
-//     })
-//     .finally(() => {
-//       countriesContainer.style.opacity = 1;
-//     });
-// };
+const getJSON = function (url, error = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${error}, ${response.status}`);
+    return response.json();
+  });
+};
+const getCountryData2 = function (country) {
+  getJSON(
+    `https://restcountries.com/v2/name/${country}`,
+    'RESTCountryAPI not available'
+  )
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders[0];
+      if (!neighbour) throw new Error('No neighbour found!');
+      return getJSON(
+        `https://restcountries.com/v2/alpha/${neighbour}`,
+        'Country not found'
+      );
+    })
+    .then(data => renderCountry(data, 'neighbour'))
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥 ${err.message}. try again!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
 
 // const whereAmI = function (lat, lon) {
 //   getJSON(
@@ -244,7 +244,7 @@ GOOD LUCK 😀
 //       console.log(data);
 //       const { city, country} = data.address;
 //       const isoCode = data.address["ISO3166-2-lvl4"];
-      
+
 //       getCountryData2(country);
 //       console.log(`You are in ${city}, ${country}`);
 //     })
@@ -272,7 +272,7 @@ GOOD LUCK 😀
 //       resolve('You win the lottery💥')
 //     } else {
 //       reject(new Error('You lose 💩'))
-//     } 
+//     }
 //   }, 2000)
 // })
 
@@ -293,3 +293,36 @@ GOOD LUCK 😀
 
 // Promise.resolve('abc').then(x => console.log(x));
 // Promise.reject(new Error('Problem!')).then(x => console.log(x))
+
+// const getPosition = function () {
+//   return new Promise(function (resolve, reject) {
+//     // navigator.geolocation.getCurrentPosition(
+//     //   position => resolve(position),
+//     //   err => reject(err)
+//     // );
+//     navigator.geolocation.getCurrentPosition(resolve, reject);
+//   });
+// };
+
+// const whereAmI = function () {
+//   getPosition()
+//     .then(pos => {
+//       console.log(pos);
+//       const { latitude: lat, longitude: lon } = pos.coords;
+
+//       return fetch(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}&api_key=6697a77bd9d3f606025998nxq7a419d`);
+//     })
+//     .then(response => {
+//       if (!response.ok) throw new Error(`${error}, ${response.status}`);
+//       return response.json();
+//     })
+//     .then(data => {
+//       console.log(data);
+//       const { city, country } = data.address;
+//       getCountryData2(country);
+//       console.log(`You are in ${city}, ${country}`);
+//     })
+//     .catch(err => console.log(err));
+// };
+
+// btn.addEventListener('click', whereAmI);
