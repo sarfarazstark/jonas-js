@@ -463,7 +463,6 @@ console.log('1: Will get location');
 // }
 
 console.log('First');
-*/
 
 const get3Countries = async function (c1, c2, c3) {
   const url = function (c) {
@@ -492,3 +491,67 @@ const get3Countries = async function (c1, c2, c3) {
   }
 };
 get3Countries('india', 'china', 'uzbekistan');
+*/
+
+(async function () {
+  const res = await Promise.race([
+    getJSON(`https://restcountries.com/v2/name/germany?fullText=true`),
+    getJSON(`https://restcountries.com/v2/name/china?fullText=true`),
+    getJSON(`https://restcountries.com/v2/name/india?fullText=true`),
+  ]);
+  // console.log(res[0]);
+})();
+
+// Promise.race:
+// The Promise.race method takes an array of promises as input and returns a new promise that is settled as soon as any of the input promises is settled. The settled value or reason of the returned promise will be the value or reason of the first settled promise in the input array.
+
+const timeout = function (sec) {
+  return new Promise(function (_, reject) {
+    setTimeout(() => reject(new Error('Promise took too long')), sec * 1000);
+  });
+};
+
+Promise.race([
+  getJSON(`https://restcountries.com/v2/name/china?fullText=true`),
+  getJSON(`https://restcountries.com/v2/name/india?fullText=true`),
+  timeout(2.2),
+])
+  .then(res => {
+    console.log('race:');
+    console.log(res[0]);
+  })
+  .catch(err => console.log(err));
+
+// Promise.allSettled:
+// The Promise.allSettled method takes an array of promises as input and returns a new promise that is settled when all the input promises are settled, regardless of whether they fulfill or reject.
+
+Promise.allSettled([
+  Promise.resolve('allSettled: Success'),
+  Promise.reject('allSettled: Reject'),
+  Promise.resolve('allSettled: Another Success'),
+  Promise.reject('allSettled: Another Reject'),
+]).then(res => console.log(res));
+
+// Promise.all:
+// The Promise.all method takes an array of promises as input and returns a new promise that is settled when all the input promises are settled. If all the input promises fulfill, the returned promise is fulfilled with an array of the fulfilled values of the input promises, in the same order. If any of the input promises reject, the returned promise is rejected with the reason of the first rejected promise.
+
+Promise.all([
+  Promise.resolve('All: Success'),
+  Promise.reject('All: Reject'),
+  Promise.resolve('All: Another Success'),
+  Promise.reject('All: Another Reject'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
+
+// Promise.any
+// The Promise.any method takes an array of promises as input and returns a new promise that is settled as soon as any of the input promises is fulfilled. The fulfilled value of the returned promise will be the fulfilled value of the first fulfilled promise in the input array. If all the input promises reject, the returned promise is rejected with an AggregateError that contains all the rejection reasons.
+
+Promise.any([
+  Promise.resolve('Any: Success'),
+  Promise.reject('Any: Reject'),
+  Promise.resolve('Any: Another Success'),
+  Promise.reject('Any: Another Reject'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
