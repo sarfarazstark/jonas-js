@@ -393,6 +393,7 @@ GOOD LUCK 😀
 //     console.error(error);
 //   });
 
+/*
 const getPosition = function () {
   return new Promise(function (resolve, reject) {
     //   position => resolve(position),
@@ -420,18 +421,38 @@ const whereAmI = async function () {
     const res = await fetch(
       `https://restcountries.com/v2/name/${country}?fullText=true`
     );
-    console.log(`You are in ${city}, ${country}`);
+    // console.log(`You are in ${city}, ${country}`);
     const data = await res.json();
 
     // Rendering the country data
     renderCountry(data[0]);
+
+    return `You are in ${city}, ${country}`;
   } catch (err) {
     console.error(`${err} 💥💥💥`);
     renderError(`Something went wrong 💥💥 ${err.message}. try again!`);
+
+    throw err;
   }
 };
 
-whereAmI();
+console.log('1: Will get location');
+// const city = whereAmI();
+// console.log(city);
+// whereAmI()
+//   .then(city => console.log(`2: ${city}`))
+//   .catch(err => console.error(`2: ${err.message}`))
+//   .finally(() => console.log('3: Finished getting location'));
+
+(async function () {
+  try {
+    const city = await whereAmI();
+    console.log(`2: ${city}`);
+  } catch (err) {
+    console.log(err);
+  }
+  console.log('3: Finished getting location');
+})();
 
 // try {
 //   let x = 1;
@@ -442,3 +463,32 @@ whereAmI();
 // }
 
 console.log('First');
+*/
+
+const get3Countries = async function (c1, c2, c3) {
+  const url = function (c) {
+    return `https://restcountries.com/v2/name/${c}?fullText=true`;
+  };
+  try {
+    // const [data1] = await getJSON(
+    //   `https://restcountries.com/v2/name/${c1}?fullText=true`
+    // );
+    // const [data2] = await getJSON(
+    //   `https://restcountries.com/v2/name/${c2}?fullText=true`
+    // );
+    // const [data3] = await getJSON(
+    //   `https://restcountries.com/v2/name/${c3}?fullText=true`
+    // );
+
+    const data = await Promise.all([
+      getJSON(url(c1)),
+      getJSON(url(c2)),
+      getJSON(url(c3)),
+    ]);
+
+    console.log(data.map(d => d[0].capital));
+  } catch (error) {
+    console.log(error);
+  }
+};
+get3Countries('india', 'china', 'uzbekistan');
