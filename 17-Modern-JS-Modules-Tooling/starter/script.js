@@ -31,4 +31,30 @@ console.log(lastPost);
 
 const lastPost2 = await getLastPost();
 console.log(lastPost2);
+
+const shoppingCart2 = (function () {
+  const cart = [];
+  const shippingCost = 100;
+  const totalPrice = 4000;
+  const totalQuantity = 70;
+  const addToCart = function (item, quantity) {
+    cart.push({ item, quantity });
+    console.log(`${item} is added in cart`);
+  };
+
+  const orderStock = function (item, quantity) {
+    console.log(`${quantity} ${item} ordered from supplier`);
+  };
+
+  return {
+    addToCart,
+    cart,
+    totalPrice,
+    totalQuantity,
+  };
+})();
+
+shoppingCart2.addToCart('apple', 2);
+shoppingCart2.addToCart('pizza', 3);
+console.log(shoppingCart2.cart);
 */
